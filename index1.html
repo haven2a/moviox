@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovioX - Video Engine</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f2027;
+color:white;
+text-align:center;
+transition:0.5s;
+overflow:hidden;
+}
+
+.container{
+padding:40px 20px;
+max-width:700px;
+margin:auto;
+}
+
+textarea{
+width:100%;
+height:120px;
+padding:10px;
+font-size:18px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+button{
+margin-top:15px;
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#00c896;
+color:white;
+cursor:pointer;
+}
+
+#screen{
+margin-top:40px;
+height:250px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+font-weight:bold;
+background:rgba(255,255,255,0.08);
+border-radius:15px;
+padding:20px;
+transition:0.6s;
+animation:none;
+}
+
+/* حركة الفيديو */
+.fade{
+animation:fade 0.6s ease;
+}
+
+@keyframes fade{
+from{opacity:0; transform:scale(0.9);}
+to{opacity:1; transform:scale(1);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎬 MovioX Video Engine</h1>
+
+<textarea id="text" placeholder="اكتب نصك هنا... ضع سطر جديد لكل مشهد"></textarea>
+
+<br>
+
+<button onclick="startVideo()">▶ تشغيل الفيديو</button>
+
+<div id="screen">جاهز لتشغيل الفيديو</div>
+
+</div>
+
+<script>
+
+function startVideo(){
+
+let text = document.getElementById("text").value;
+let screen = document.getElementById("screen");
+
+let scenes = text.split(/\n/).filter(s => s.trim() !== "");
+
+let i = 0;
+
+function play(){
+
+if(i >= scenes.length) return;
+
+let scene = scenes[i];
+
+screen.classList.remove("fade");
+void screen.offsetWidth;
+screen.classList.add("fade");
+
+screen.innerHTML = scene;
+
+// تغيير لون الخلفية لكل مشهد
+document.body.style.background =
+"hsl(" + (i * 60) + ", 50%, 15%)";
+
+// صوت
+let speech = new SpeechSynthesisUtterance(scene);
+speech.lang = "ar-SA";
+
+speech.onend = function(){
+i++;
+setTimeout(play, 700);
+};
+
+window.speechSynthesis.speak(speech);
+
+}
+
+play();
+}
+
+</script>
+
+</body>
+</html>
